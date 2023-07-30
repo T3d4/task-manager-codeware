@@ -1,39 +1,12 @@
 import React, { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import { faClock } from '@fortawesome/free-regular-svg-icons'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
-
+// import { EditTodoForm } from "./EditTodoForm";
+import { TodoForm } from './TodoForm';
+import { Todo } from './Todo';
+// import { TodoModal } from './TodoModal';
 
 
 export const TaskWrapper = () => {
-    let [items, setItems] = useState([
-        {
-            id: 1,
-            title: 'Buy groceries',
-            dueDate: Date(),
-            isComplete: false,
-        },
-        {
-            id: 2,
-            title: 'Clean the house',
-            dueDate: '2023-07-27',
-            isComplete: false,
-        },
-        {
-            id: 3,
-            title: 'Go to the gym',
-            dueDate: '2023-07-28',
-            isComplete: false,
-        },
-    ]);
-
-    let [newTask, setNewTask] = useState('');
-
-    const handleInputChange = (event) => {
-        setNewTask(event.target.value);
-    };
+    let [items, setItems] = useState([]);
 
     const handleUpdateItem = (id, newTitle, newDueDate) => {
         const newItems = items.map((item) => {
@@ -46,8 +19,15 @@ export const TaskWrapper = () => {
         setItems(newItems);
     };
 
+    const today = new Date();
+    const dateString = today.toLocaleDateString("en-NG", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+    });
 
-    const handleAddItem = () => {
+    const handleAddItem = (newTask) => {
+        console.log("initial", newTask)
         newTask = newTask.trim();
         if (!newTask) {
             return;
@@ -56,12 +36,11 @@ export const TaskWrapper = () => {
         items = [...items, {
             id: Math.random(),
             title: newTask,
-            dueDate: '',
+            dueDate: dateString,
             isComplete: false,
         }];
 
         setItems(items);
-        setNewTask('');
     };
 
     const handleDeleteItem = (id) => {
@@ -69,52 +48,36 @@ export const TaskWrapper = () => {
         setItems(newItems);
     };
 
+
     const handleCompleteItem = (id) => {
         const newItems = items.map((item) => {
-            if (item.id === id) {
-                item.isComplete = true;
+            if (item.id === id && item.isComplete === false) {
+                item.isComplete = true
+            }
+
+            else {
+                item.isComplete = false;
             }
             return item;
         });
         setItems(newItems);
     };
 
+
+
     return (
+
         <div className='TaskWrapper'>
             <h1>To Do List</h1>
-            <input
-                className='task-input'
-                type="text"
-                placeholder="Enter new item"
-                value={newTask}
-                onChange={handleInputChange}
-            />
-            <button onClick={handleAddItem}>Add Item</button>
-            <table className='table-container'>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Created Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map((item) => (
-                        <tr key={item.id} >
-                            {/* <td>{item.id}</td> */}
-                            <td>{item.title} <FontAwesomeIcon icon={faPenToSquare} className='update-btn' onClick={() => handleUpdateItem(item.id, 'New Title', '2023-07-30')} /></td>
-                            <td>{item.isComplete ? 'Yes' : 'No'}</td>
-                            <td>{item.dueDate}</td>
-                            <td className='actions'>
-                                <FontAwesomeIcon icon={faCheck} onClick={() => handleCompleteItem(item.id)} />
-                                <FontAwesomeIcon icon={faTrash} onClick={() => handleDeleteItem(item.id)} />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
+            {/* <TodoModal /> */}
+            <TodoForm handleAddItem={handleAddItem} />
+            <div>
+                <Todo
+                    items={items}
+                    handleUpdateItem={handleUpdateItem}
+                    handleDeleteItem={handleDeleteItem}
+                    handleCompleteItem={handleCompleteItem} />
+            </div>
         </div>
     );
 };
