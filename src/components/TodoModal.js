@@ -28,29 +28,29 @@ export const TodoModal = ({ item, handleUpdateItem, show, title, setShow, select
     return (
         <div className='modal'>
             <div className='modal-content'>
-                <div className='modal-header'>
-                    <h4 className='modal-title'>
-                        Modal Title
-                    </h4>
-                </div>
-                <div className='modal-footer'>
-                    <form onSubmit={(event) => {
-                        handleInputChange(event)
-                        return setShow(false)
-                    }} className="TodoForm">
-                        <input
-                            type="text"
-                            value={newTask}
-                            autoFocus
-                            onChange={(e) => { setNewTask(e.target.value) }}
-                            className="todo-input"
-                            placeholder='Update Task' />
-                        <button type="submit" className='modal-footer'>Update Task</button>
-                    </form>
-                    {/* <button className='modal-footer'>
+                <div className='modal-header' >
+                    <div className='modal-body'>
+                        <form onSubmit={(event) => {
+                            handleInputChange(event)
+                            return setShow(false)
+                        }}>
+                            <input
+                                type="text"
+                                value={newTask}
+                                autoFocus
+                                onChange={(e) => { setNewTask(e.target.value) }}
+                                className="modal-task-input"
+                                placeholder='Update Task' />
+                            <button type="submit" className='modal-footer'>Update Task</button>
+                        </form>
+                    </div>
+                    <div className='modal-footer'>
+                        {/* <button className='modal-footer'>
                         Close
                     </button> */}
+                    </div>
                 </div>
+
             </div>
         </div>
     )

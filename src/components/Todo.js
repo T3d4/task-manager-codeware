@@ -33,7 +33,7 @@ export const Todo = ({ items, handleDeleteItem, handleCompleteItem, handleUpdate
 
                     <tr key={item.id} >
 
-                        <td className={`${item.isComplete ? 'completed' : ''}`}>{item.title}
+                        <td className={` table-text ${item.isComplete ? 'completed' : ''}`}>{item.title}
                             <FontAwesomeIcon icon={faPenToSquare} className='update-btn'
                                 onClick={() => {
                                     setShow(true)
@@ -50,7 +50,7 @@ export const Todo = ({ items, handleDeleteItem, handleCompleteItem, handleUpdate
                             />
                         </td>
 
-                        <td>{item.isComplete ? "Completed" : "Pending"}</td>
+                        <td className='status'>{item.isComplete ? "Completed" : "Pending"}</td>
                         <td>{item.dueDate}</td>
                         <td className='actions'>
                             {item.isComplete ? <FontAwesomeIcon icon={faCheck} onClick={() => handleCompleteItem(item.id)} className="done" /> : <FontAwesomeIcon icon={faClock} onClick={() => handleCompleteItem(item.id)} className="pending" />}

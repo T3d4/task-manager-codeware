@@ -1,3 +1,7 @@
+* {
+  width: 300-x;
+}
+
 .table-container {
   width: 100%;
   border-collapse: collapse;
@@ -40,7 +44,8 @@ form {
   background: var(--white);
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
-  padding: 2rem 2.5rem;
+  padding-left: 0;
+  margin: 0;
 }
 
 .task-form {
@@ -94,8 +99,9 @@ h1 {
 }
 
 .actions {
-  display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-left: auto;
 }
 
 .actions > * {
@@ -109,13 +115,15 @@ h1 {
 }
 
 .table-text {
-  word-wrap: break-word;
-  max-width: 300px;
-  overflow: hidden;
+  word-break: break-word;
+
+  text-overflow: ellipsis;
 }
 
 .delete-btn {
   color: red;
+  margin-left: 5px;
+  padding-left: 0;
 }
 
 .completed {
@@ -129,6 +137,10 @@ h1 {
 
 .done {
   color: rgb(0, 144, 0);
+}
+
+.status {
+  margin-right: 10px;
 }
 
 .modal {
@@ -150,15 +162,51 @@ h1 {
 
 .modal-header,
 .modal-footer {
-  padding: 10px;
+  padding: 5px;
 }
 
 .modal-title {
   margin: 0;
+  text-align: center;
 }
 
 .modal-body {
-  padding: 10px;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
+}
+
+.modal-task-input {
+  justify-content: center;
+  width: 300px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  padding-right: 2rem;
+  margin-right: 1rem;
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.delete-btn,
+.pending,
+.done {
+  margin-left: 8px; /* Add default space between the buttons */
+  flex-shrink: 0;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .delete-btn,
+  .pending,
+  .done {
+    margin-left: 5px; /* Adjust the margin for smaller screens */
+  }
+}
+
+/* Media query for even smaller screens */
+@media (max-width: 576px) {
+  .delete-btn,
+  .pending,
+  .done {
+    margin-left: 3px; /* Adjust the margin for even smaller screens */
+  }
 }
