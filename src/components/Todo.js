@@ -1,12 +1,21 @@
 import React from 'react';
+import { TodoModal } from './TodoModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { faClock } from '@fortawesome/free-regular-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react';
 
 
-export const Todo = ({ items, handleUpdateItem, handleDeleteItem, handleCompleteItem }) => {
+export const Todo = ({ items, handleDeleteItem, handleCompleteItem, handleUpdateItem }) => {
+    const [show, setShow] = useState(false)
+    const [selectedTask, setSelectedTask] = useState(null);
+
+    const handleUpdateIconClick = (item) => {
+        setSelectedTask(item);
+        setShow(true);
+    };
 
     return (
         <table className='table-container'>
@@ -26,7 +35,19 @@ export const Todo = ({ items, handleUpdateItem, handleDeleteItem, handleComplete
 
                         <td className={`${item.isComplete ? 'completed' : ''}`}>{item.title}
                             <FontAwesomeIcon icon={faPenToSquare} className='update-btn'
-                                onClick={() => handleUpdateItem(item.id, 'New Title', '2023-07-30')} />
+                                onClick={() => {
+                                    setShow(true)
+                                    handleUpdateIconClick(item)
+                                }} />
+                            <TodoModal
+                                key={item.id}
+                                item={item}
+                                title={item.title}
+                                setShow={setShow}
+                                show={show}
+                                handleUpdateItem={handleUpdateItem}
+                                selectedTask={selectedTask}
+                            />
                         </td>
 
                         <td>{item.isComplete ? "Completed" : "Pending"}</td>

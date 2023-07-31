@@ -2,22 +2,10 @@ import React, { useState } from 'react'
 // import { EditTodoForm } from "./EditTodoForm";
 import { TodoForm } from './TodoForm';
 import { Todo } from './Todo';
-// import { TodoModal } from './TodoModal';
 
 
 export const TaskWrapper = () => {
     let [items, setItems] = useState([]);
-
-    const handleUpdateItem = (id, newTitle, newDueDate) => {
-        const newItems = items.map((item) => {
-            if (item.id === id) {
-                item.title = newTitle;
-                item.dueDate = newDueDate;
-            }
-            return item;
-        });
-        setItems(newItems);
-    };
 
     const today = new Date();
     const dateString = today.toLocaleDateString("en-NG", {
@@ -25,6 +13,7 @@ export const TaskWrapper = () => {
         month: "numeric",
         day: "numeric",
     });
+
 
     const handleAddItem = (newTask) => {
         console.log("initial", newTask)
@@ -38,6 +27,7 @@ export const TaskWrapper = () => {
             title: newTask,
             dueDate: dateString,
             isComplete: false,
+            isEditing: false
         }];
 
         setItems(items);
@@ -64,12 +54,25 @@ export const TaskWrapper = () => {
     };
 
 
+    const handleUpdateItem = (title, id) => {
+        console.log("items", items)
+        const newItems = items.map((item) => {
+            if (item.id === id) {
+                return {
+                    ...item, title,
+                    dueDate: dateString,
+                }
+            }
+            return item;
+        });
+        console.log("new item", newItems)
+        setItems(newItems)
+    }
 
     return (
 
         <div className='TaskWrapper'>
             <h1>To Do List</h1>
-            {/* <TodoModal /> */}
             <TodoForm handleAddItem={handleAddItem} />
             <div>
                 <Todo

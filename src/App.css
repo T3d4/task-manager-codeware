@@ -35,6 +35,13 @@ button {
   border: none;
   cursor: pointer;
 }
+form {
+  width: 100%;
+  background: var(--white);
+  border-radius: var(--borderRadius);
+  box-shadow: var(--shadow-2);
+  padding: 2rem 2.5rem;
+}
 
 .task-form {
   margin-top: 20px;
@@ -134,4 +141,24 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.modal-content {
+  width: 500px;
+  background-color: white;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 10px;
+}
+
+.modal-title {
+  margin: 0;
+}
+
+.modal-body {
+  padding: 10px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
