@@ -44,11 +44,6 @@ export const TodoModal = ({ item, handleUpdateItem, show, title, setShow, select
                             <button type="submit" className='modal-footer'>Update Task</button>
                         </form>
                     </div>
-                    <div className='modal-footer'>
-                        {/* <button className='modal-footer'>
-                        Close
-                    </button> */}
-                    </div>
                 </div>
 
             </div>

@@ -11,17 +11,17 @@ export const TodoForm = ({ handleAddItem }) => {
             setNewTask('')
         }
 
-
     };
 
     return (
+
         <div>
             <form onSubmit={handleInputChange}>
                 <input
                     className='task-input'
                     type="text"
                     autoFocus
-                    placeholder="Enter new item"
+                    placeholder="Enter new task..."
                     value={newTask}
                     onChange={(e) => { setNewTask(e.target.value) }}
                 />

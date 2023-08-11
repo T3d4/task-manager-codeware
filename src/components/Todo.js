@@ -51,7 +51,7 @@ export const Todo = ({ items, handleDeleteItem, handleCompleteItem, handleUpdate
                         </td>
 
                         <td className='status'>{item.isComplete ? "Completed" : "Pending"}</td>
-                        <td>{item.dueDate}</td>
+                        <td>{item.dateCreated}</td>
                         <td className='actions'>
                             {item.isComplete ? <FontAwesomeIcon icon={faCheck} onClick={() => handleCompleteItem(item.id)} className="done" /> : <FontAwesomeIcon icon={faClock} onClick={() => handleCompleteItem(item.id)} className="pending" />}
                             <FontAwesomeIcon icon={faTrash} onClick={() => handleDeleteItem(item.id)} className="delete-btn" />

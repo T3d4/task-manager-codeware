@@ -1,79 +1,125 @@
-import React, { useState } from 'react'
-// import { EditTodoForm } from "./EditTodoForm";
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 import { TodoForm } from './TodoForm';
 import { Todo } from './Todo';
-
+import io from 'socket.io-client'
 
 export const TaskWrapper = () => {
-    let [items, setItems] = useState([]);
+    const [items, setItems] = useState([]);
 
-    const today = new Date();
-    const dateString = today.toLocaleDateString("en-NG", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-    });
+    useEffect(() => {
+        const socket = io();
+        const fetchTasks = async () => {
+            try {
+                const response = await axios.get('/api/v1/tasks');
+                const datum = response.data
+                const data = datum.map((item) => {
+                    const date = new Date(item.dateCreated);
+                    const formatDate = date.toISOString().split('T')[0];
+                    return { ...item, dateCreated: formatDate }
+
+                })
+                console.log(data)
+                setItems(data);
+            }
+            catch (error) {
+                console.error(`error: ${error}`);
+            }
+        };
+        socket.on('update', () => {
+            console.log('Received updateTask event');
+            fetchTasks();
+        });
+        socket.on('connection', () => fetchTasks());
+        return () => {
+            socket.disconnect(); // Disconnect when the component unmounts
+        };
+    }
+        , [])
+
+    const dateString = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const dateFormat = `${year}-${month}-${day}`;
+        return dateFormat
+    }
 
 
-    const handleAddItem = (newTask) => {
-        console.log("initial", newTask)
+
+
+    const handleAddItem = async (newTask) => {
         newTask = newTask.trim();
         if (!newTask) {
             return;
         }
-
-        items = [...items, {
-            id: Math.random(),
+        // Update the content of the original array(items)
+        const itemObject = {
             title: newTask,
-            dueDate: dateString,
-            isComplete: false,
-            isEditing: false
-        }];
-
-        setItems(items);
+            dateCreated: dateString(),
+            isComplete: false
+        }
+        const addTask = async () => {
+            try {
+                await axios.post('/api/v1/tasks', itemObject);
+            } catch (error) {
+                console.log(`error: ${error}`);
+            }
+        }
+        addTask();
     };
 
-    const handleDeleteItem = (id) => {
-        const newItems = items.filter((item) => item.id !== id);
-        setItems(newItems);
-    };
-
-
-    const handleCompleteItem = (id) => {
-        const newItems = items.map((item) => {
-            if (item.id === id && item.isComplete === false) {
-                item.isComplete = true
+    const handleDeleteItem = async (id) => {
+        try {
+            if (id !== undefined) {
+                setItems((items) => items.filter((task) => task.id !== id));
+                await axios.delete(`/api/v1/tasks/${id}`);
             }
+        }
+        catch (error) {
+            console.log(`error:::${error}`);
+        }
+    }
 
-            else {
-                item.isComplete = false;
-            }
-            return item;
-        });
-        setItems(newItems);
-    };
+    const handleCompleteItem = async (id) => {
+        try {
+            const updatedItems = items.map(currentItem =>
+                currentItem.id === id ? {
+                    ...currentItem,
+                    isComplete: !currentItem.isComplete
+                } : currentItem);
+            const updatedItem = updatedItems.find(item => item.id === id);
+            await axios.patch(`/api/v1/tasks/${id}`, {
+                isComplete: updatedItem.isComplete
+            })
+        } catch (error) {
+            console.log(`error::: ${error}`)
+        }
+    }
 
-
-    const handleUpdateItem = (title, id) => {
-        console.log("items", items)
-        const newItems = items.map((item) => {
-            if (item.id === id) {
-                return {
-                    ...item, title,
-                    dueDate: dateString,
-                }
-            }
-            return item;
-        });
-        console.log("new item", newItems)
-        setItems(newItems)
+    const handleUpdateItem = async (title, id) => {
+        try {
+            const newItems = items.map((item) =>
+                item.id === id ? { ...item, title, } : item);
+            const updateItem = newItems.find(item => item.id === id)
+            await axios.patch(`/api/v1/tasks/${id}`, {
+                title: updateItem.title
+            })
+        } catch (error) {
+            console.log(`error:::${error}`);
+        }
     }
 
     return (
 
+
         <div className='TaskWrapper'>
+
             <h1>To Do List</h1>
-            <TodoForm handleAddItem={handleAddItem} />
+            <TodoForm
+                handleAddItem={handleAddItem}
+            />
             <div>
                 <Todo
                     items={items}
@@ -82,5 +128,6 @@ export const TaskWrapper = () => {
                     handleCompleteItem={handleCompleteItem} />
             </div>
         </div>
+
     );
 };
